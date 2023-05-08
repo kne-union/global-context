@@ -1,6 +1,6 @@
 {
   "name": "@kne/global-context",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0",
   "description": "提供一个全局唯一的context，用在多个webpack 邦联模块系统中，可以避免不同版本导致context获取问题",
   "peerDependencies": {
     "prop-types": ">=15.x",
