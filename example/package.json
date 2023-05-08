@@ -8,7 +8,10 @@
     "test": "craco test"
   },
   "dependencies": {
-    "@kne/example-driver": "^0.1.0"
+    "@kne/example-driver": "^0.1.0",
+    "@kne/global-context": "file:..",
+    "react": "file:../node_modules/react",
+    "react-dom": "file:../node_modules/react-dom"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -25,6 +28,10 @@
     "chokidar": "^3.5.3",
     "cross-spawn-promise": "^0.10.2",
     "fs-extra": "^10.1.0",
+    "node-sass": "^8.0.0",
     "react-scripts": "^5.0.1"
+  },
+  "syntax": {
+    "esmodules": true
   }
 }
