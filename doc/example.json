@@ -8,7 +8,7 @@
       "scope": [
         {
           "name": "globalContext",
-          "packageName": "@kne/global-context"
+          "packageName": "@kne/current-lib_global-context"
         }
       ],
       "__scope_notes": {
