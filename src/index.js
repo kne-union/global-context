@@ -4,7 +4,7 @@ export const context = createContext({});
 
 export const { Provider, Consumer, useContext } = context;
 
-export const useGlobalContext = () => useContext;
+export const useGlobalContext = useContext;
 
 export { createContext };
 
