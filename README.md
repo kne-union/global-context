@@ -47,6 +47,32 @@ render(<BaseExample />);
 
 ```
 
+- 这里填写示例标题
+- 这里填写示例说明
+- globalContext(@kne/current-lib_global-context)
+
+```jsx
+const { Global, GlobalSetting, GlobalValue, Preset } = globalContext;
+
+const BaseExample = () => {
+  return <Global preset={{ a: 1 }}>
+    <GlobalSetting loader={() => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({ userName: "Linzp" });
+        }, 1000);
+      });
+    }}>
+      userName:<GlobalValue globalKey="userName">{({ value }) => value}</GlobalValue>
+    </GlobalSetting>
+    <Preset>{({ a }) => a}</Preset>
+  </Global>;
+};
+
+render(<BaseExample />);
+
+```
+
 
 ### API
 

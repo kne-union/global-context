@@ -15,6 +15,17 @@
         "name": "这里填写包导出名称(这是一个注释字段，需要添加到[scope]中)",
         "packageName": "这里填写包名(这是一个注释字段，需要添加到[scope]中)"
       }
+    },
+    {
+      "title": "这里填写示例标题",
+      "description": "这里填写示例说明",
+      "code": "./global.js",
+      "scope": [
+        {
+          "name": "globalContext",
+          "packageName": "@kne/current-lib_global-context"
+        }
+      ]
     }
   ]
 }

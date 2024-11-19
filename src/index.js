@@ -1,16 +1,4 @@
-import createContext from "./createContext";
-
-export const context = createContext({});
-
-export const { Provider, Consumer, useContext } = context;
-
-export const useGlobalContext = useContext;
-
-export const usePreset = () => {
-  const contextValue = useContext();
-  return Object.assign({}, { apis: {} }, contextValue?.preset);
-};
-
-export { createContext };
-
-export default context;
+export * from "./globalContext";
+export { default } from "./globalContext";
+export { default as createContext } from "./createContext";
+export { default as Global, GlobalSetting, GlobalValue, useGlobalValue, Preset } from "./Global";
