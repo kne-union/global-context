@@ -25,7 +25,7 @@ export const GlobalSetting = ({loader, needReady = true, children}) => {
     const globalRef = useRef(null);
     const loaderRef = useRef(loader);
     useEffect(() => {
-        loaderRef.current().then((target) => {
+        Promise.resolve(loaderRef.current).then((target) => {
             setGlobal((global) => {
                 const nextGlobal = Object.assign({}, global, target);
                 globalRef.current = nextGlobal;
