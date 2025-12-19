@@ -43,22 +43,21 @@ Global Context 是一个专为 React 应用设计的全局状态管理解决方�
 - globalContext(@kne/current-lib_global-context)
 
 ```jsx
-const { Provider, useContext } = globalContext;
+const {Provider, useContext} = globalContext;
 
 const ChildrenComponent = () => {
-  const value = useContext();
-
-  return <div>context value: {JSON.stringify(value)}</div>;
+    const value = useContext();
+    return <div>context value: {JSON.stringify(value)}</div>;
 };
 
 const BaseExample = () => {
-  return <Provider value={{ a: 1 }}>
-    <div>我是一个示例组件</div>
-    <ChildrenComponent />
-  </Provider>;
+    return <Provider value={{a: 1}}>
+        <div>我是一个示例组件</div>
+        <ChildrenComponent/>
+    </Provider>;
 };
 
-render(<BaseExample />);
+render(<BaseExample/>);
 
 ```
 
@@ -129,6 +128,58 @@ const BaseExample = () => {
         <Children2Component/>
         <ChildrenSetValue/>
     </Global>;
+};
+
+render(<BaseExample/>);
+
+```
+
+- 多层级情况
+- 多层级情况
+- globalContext(@kne/current-lib_global-context)
+
+```jsx
+const {Global, useGlobalValue, useContext} = globalContext;
+
+const ChildrenComponent = ({children}) => {
+    const value = useGlobalValue('a');
+    const value2 = useGlobalValue('b');
+    console.log('ChildrenComponent render');
+    return <div>
+        context value.a: {value}
+        <Global initValue={{a: value, b: value2}}>
+            {children}
+        </Global>
+    </div>;
+};
+
+const SetGlobal = () => {
+    const {setGlobal} = useContext();
+    return <button onClick={() => {
+        setGlobal(global => {
+            return Object.assign({}, global, {a: global.a + 1});
+        })
+    }}>a + 1</button>
+};
+
+const BaseExample = () => {
+    return <>
+        <ChildrenComponent/>
+        <Global initValue={{a: 1, b: 2}}>
+            <ChildrenComponent>
+                <ChildrenComponent/>
+                <SetGlobal/>
+            </ChildrenComponent>
+            <SetGlobal/>
+            <Global initValue={{a: 10, b: 20}}>
+                <ChildrenComponent>
+                    <ChildrenComponent/>
+                    <SetGlobal/>
+                </ChildrenComponent>
+                <SetGlobal/>
+            </Global>
+        </Global>
+    </>;
 };
 
 render(<BaseExample/>);

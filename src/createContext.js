@@ -39,7 +39,7 @@ export const createSelectorContext = (initValue = {}) => {
 
     const useSelectorContext = (selector) => {
         const store = useContext();
-        return useSyncExternalStore(store.subscribe, () => {
+        return useSyncExternalStore(store.subscribe||(()=>{}), () => {
             return selector(store.value);
         });
     };
