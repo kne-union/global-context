@@ -1,106 +1,99 @@
-### API 参考
+### Global
+全局状态管理组件，提供跨模块的数据共享能力。
 
-#### 核心组件
+#### 属性说明
+| 属性名 | 类型 | 必填 | 默认值 | 说明 |
+|--------|------|------|--------|------|
+| preset | object | 否 | - | 预设配置数据 |
+| children | ReactNode | 是 | - | 子组件 |
+| initValue | object | 否 | {} | 初始全局状态值 |
 
-| 组件名 | 描述 | 导入方式 |
-|--------|------|----------|
-| Global | 全局状态容器组件 | `import { Global } from '@kne/global-context'` |
-| GlobalSetting | 设置全局值的组件 | `import { GlobalSetting } from '@kne/global-context'` |
-| GlobalValue | 获取全局值的组件 | `import { GlobalValue } from '@kne/global-context'` |
+### GlobalSetting
+全局状态设置组件，支持异步数据加载。
 
-#### Global
+#### 属性说明
+| 属性名 | 类型 | 必填 | 默认值 | 说明 |
+|--------|------|------|--------|------|
+| loader | function | 是 | - | 异步加载函数，返回 Promise |
+| needReady | boolean | 否 | true | 是否需要等待加载完成 |
+| children | ReactNode | 是 | - | 子组件 |
 
-全局状态容器组件的属性：
+### GlobalValue
+全局状态值渲染组件，通过渲染函数模式获取状态值。
 
-| 属性 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| children | ReactNode | 是 | 子组件 |
-| preset | object | 否 | 预设值对象 |
+#### 属性说明
+| 属性名 | 类型 | 必填 | 默认值 | 说明 |
+|--------|------|------|--------|------|
+| globalKey | string | 是 | - | 全局状态键名 |
+| children | function | 是 | - | 渲染函数，接收 value 参数 |
 
-```jsx
-<Global preset={{ theme: 'light' }}>
-  <App />
-</Global>
-```
+### Preset
+预设配置渲染组件，通过渲染函数模式获取预设值。
 
-#### GlobalSetting
+#### 属性说明
+| 属性名 | 类型 | 必填 | 默认值 | 说明 |
+|--------|------|------|--------|------|
+| children | function | 是 | - | 渲染函数，接收 preset 参数 |
 
-设置全局值的组件属性：
+### createContext
+创建 Context 实例的工具函数。
 
-| 属性 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| name | string | 是 | 全局值的键名 |
-| value | any | 是 | 要设置的值 |
+#### 返回值
+| 属性名 | 类型 | 说明 |
+|--------|------|------|
+| context | Context | React Context 对象 |
+| Provider | Component | Context Provider 组件 |
+| Consumer | Component | Context Consumer 组件 |
+| useContext | function | 获取 Context 值的 Hook |
 
-```jsx
-<GlobalSetting name="theme" value="dark" />
-```
+### useSelectorContext
+创建选择器 Context 的工具函数，支持细粒度状态订阅。
 
-#### GlobalValue
+#### 返回值
+| 属性名 | 类型 | 说明 |
+|--------|------|------|
+| context | Context | React Context 对象 |
+| Provider | Component | 选择器 Provider 组件 |
+| useContext | function | 选择器 Hook |
 
-获取全局值的组件属性：
+### useGlobalContext
+获取全局 Context 值的 Hook。
 
-| 属性 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| name | string | 是 | 全局值的键名 |
-| children | (value: any) => ReactNode | 是 | 渲染函数 |
+#### 返回值
+| 类型 | 说明 |
+|------|------|
+| object | 包含 global、setGlobal、setGlobalValue 的对象 |
 
-```jsx
-<GlobalValue name="theme">
-  {(theme) => <div>当前主题：{theme}</div>}
-</GlobalValue>
-```
+### useGlobalValue
+根据键名获取全局状态值的 Hook。
 
-#### Hooks API
+#### 参数
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| globalKey | string | 是 | 全局状态键名 |
 
-| Hook 名称 | 参数 | 返回值 | 描述 |
-|-----------|------|--------|------|
-| useGlobalValue | name: string | any | 获取指定键名的全局值 |
-| usePreset | - | object | 获取预设值对象 |
+#### 返回值
+| 类型 | 说明 |
+|------|------|
+| any | 对应键名的全局状态值 |
 
-```jsx
-const theme = useGlobalValue('theme');
-const preset = usePreset();
-```
+### usePreset
+获取预设配置值的 Hook。
 
-#### Context API
+#### 返回值
+| 类型 | 说明 |
+|------|------|
+| object | 预设配置对象 |
 
-| API | 参数 | 返回值 | 描述 |
-|-----|------|--------|------|
-| createContext | defaultValue?: any | Context 对象 | 创建新的上下文实例 |
+### useSelectorContext
+使用选择器订阅状态变化的 Hook。
 
-Context 对象包含的组件：
+#### 参数
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| selector | function | 是 | 选择器函数 |
 
-| 组件 | 属性 | 描述 |
-|------|------|------|
-| Provider | value: any | 提供上下文值的组件 |
-| Consumer | children: (value: any) => ReactNode | 消费上下文值的组件 |
-
-```jsx
-const MyContext = createContext(defaultValue);
-
-<MyContext.Provider value={value}>
-  <MyContext.Consumer>
-    {value => /* 渲染内容 */}
-  </MyContext.Consumer>
-</MyContext.Provider>
-```
-
-#### 类型定义
-
-```typescript
-interface GlobalProps {
-  children: ReactNode;
-  preset?: Record<string, any>;
-}
-
-interface GlobalSettingProps {
-  name: string;
-  value: any;
-}
-
-interface GlobalValueProps {
-  name: string;
-  children: (value: any) => ReactNode;
-}
-```
+#### 返回值
+| 类型 | 说明 |
+|------|------|
+| any | 选择器函数的返回值 |

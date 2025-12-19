@@ -1,0 +1,110 @@
+{
+  "description": "全局状态管理库，提供跨模块的Context数据共享解决方案",
+  "modules": {
+    "default": {
+      "description": "全局Context实例，包含Provider和useContext钩子",
+      "type": "object",
+      "properties": {
+        "Provider": {
+          "description": "Context Provider组件",
+          "type": "ReactNode"
+        },
+        "Consumer": {
+          "description": "Context Consumer组件",
+          "type": "ReactNode"
+        },
+        "context": {
+          "description": "React Context对象",
+          "type": "object"
+        },
+        "useContext": {
+          "description": "获取Context值的Hook",
+          "type": "function"
+        }
+      }
+    },
+    "createContext": {
+      "description": "创建Context实例的工具函数",
+      "type": "object",
+      "parameters": [
+        {
+          "name": "initValue",
+          "description": "Context初始值",
+          "type": "object"
+        }
+      ],
+      "returns": "object"
+    },
+    "Global": {
+      "description": "全局状态管理组件，提供跨模块的数据共享能力",
+      "type": "ReactNode",
+      "props": {
+        "preset": {
+          "description": "预设配置数据",
+          "type": "object"
+        },
+        "children": {
+          "description": "子组件",
+          "type": "ReactNode"
+        },
+        "initValue": {
+          "description": "初始全局状态值",
+          "type": "object"
+        }
+      }
+    },
+    "GlobalSetting": {
+      "description": "全局状态设置组件，支持异步数据加载",
+      "type": "ReactNode",
+      "props": {
+        "loader": {
+          "description": "异步加载函数，返回Promise",
+          "type": "function"
+        },
+        "needReady": {
+          "description": "是否需要等待加载完成",
+          "type": "boolean"
+        },
+        "children": {
+          "description": "子组件",
+          "type": "ReactNode"
+        }
+      }
+    },
+    "GlobalValue": {
+      "description": "全局状态值渲染组件，通过渲染函数模式获取状态值",
+      "type": "ReactNode",
+      "props": {
+        "globalKey": {
+          "description": "全局状态键名",
+          "type": "string"
+        },
+        "children": {
+          "description": "渲染函数，接收value参数",
+          "type": "function"
+        }
+      }
+    },
+    "useGlobalValue": {
+      "description": "根据键名获取全局状态值的Hook",
+      "type": "any",
+      "parameters": [
+        {
+          "name": "globalKey",
+          "description": "全局状态键名",
+          "type": "string"
+        }
+      ]
+    },
+    "Preset": {
+      "description": "预设配置渲染组件，通过渲染函数模式获取预设值",
+      "type": "ReactNode",
+      "props": {
+        "children": {
+          "description": "渲染函数，接收preset参数",
+          "type": "function"
+        }
+      }
+    }
+  }
+}
