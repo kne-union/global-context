@@ -2,8 +2,8 @@
   "isFull": false,
   "list": [
     {
-      "title": "这里填写示例标题",
-      "description": "这里填写示例说明",
+      "title": "基础上下文",
+      "description": "展示Provider和useContext的基本使用方法",
       "code": "./base.js",
       "scope": [
         {
@@ -17,9 +17,20 @@
       }
     },
     {
-      "title": "这里填写示例标题",
-      "description": "这里填写示例说明",
+      "title": "全局状态管理",
+      "description": "使用Global组件管理全局状态，支持预设和异步加载",
       "code": "./global.js",
+      "scope": [
+        {
+          "name": "globalContext",
+          "packageName": "@kne/current-lib_global-context"
+        }
+      ]
+    },
+    {
+      "title": "性能优化渲染",
+      "description": "使用useGlobalValue避免不必要的组件重渲染",
+      "code": "./re-rendering.js",
       "scope": [
         {
           "name": "globalContext",

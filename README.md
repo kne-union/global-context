@@ -16,71 +16,30 @@ npm i --save @kne/global-context
 
 ### 概述
 
-@kne/global-context 是一个轻量级的 React 全局上下文管理库，专为微前端架构设计，确保在多个 webpack 联邦模块系统中提供全局唯一的 context。
+Global Context 是一个专为 React 应用设计的全局状态管理解决方案，特别适用于使用多个 Webpack 联邦模块的复杂项目架构。该项目通过提供全局唯一的 Context 实例，有效解决了不同模块版本间 Context 隔离的问题，确保跨模块组件间的数据共享和状态同步。
 
-### 特性
+**核心特性**
+- 提供全局唯一的 Context，支持跨模块数据共享
+- 兼容 Webpack 联邦模块系统，避免版本冲突
+- 内置选择器模式，优化组件渲染性能
+- 支持异步数据加载和预设值配置
+- 轻量级设计，无额外依赖，易于集成
 
-#### 核心功能
-- 提供全局唯一的 context 实例
-- 支持预设值管理
-- 简化的全局状态访问
-- 支持动态值更新
+**适用场景**
+- 微前端架构中的跨应用状态管理
+- 多模块联邦系统中的数据同步需求
+- 需要全局配置信息共享的大型 React 项目
+- 组件库与业务应用间的参数传递场景
 
-#### 技术优势
-- 轻量级实现
-- 基于 React Context API
-- 支持 TypeScript
-- 适配微前端架构
-
-### 架构设计
-
-#### 核心模块
-- **globalContext**: 全局唯一的上下文实例
-- **createContext**: 上下文创建工具
-- **Global**: 全局状态容器
-
-#### 数据流
-```
-Provider (全局上下文)
-    ↓
-GlobalSetting (设置值)
-    ↓
-Global (状态管理)
-    ↓
-GlobalValue/useGlobalValue (获取值)
-```
-
-### 使用场景
-
-#### 微前端应用
-- 跨模块状态共享
-- 统一配置管理
-- 主题样式同步
-
-#### 状态管理
-- 用户认证信息
-- 全局配置项
-- 主题设置
-
-### 最佳实践
-
-#### 基本原则
-- 在应用顶层使用 Provider
-- 合理使用预设值
-- 避免过度使用全局状态
-
-#### 性能优化
-- 使用 hooks 代替组件式API
-- 合理划分全局状态
-- 避免频繁更新
-
+**技术亮点**
+采用 React 18 最新特性，基于 useSyncExternalStore 实现高效的状态订阅机制。通过 Context 隔离和选择器模式，在保证全局状态可访问性的同时，最大化减少了不必要的组件重渲染。项目设计遵循 React 最佳实践，提供完整的 TypeScript 类型支持，确保开发体验和代码质量。
 
 ### 示例
 
 #### 示例代码
 
-- 这里填写示例标题
-- 这里填写示例说明
+- 基础上下文
+- 展示Provider和useContext的基本使用方法
 - globalContext(@kne/current-lib_global-context)
 
 ```jsx
@@ -103,8 +62,8 @@ render(<BaseExample />);
 
 ```
 
-- 这里填写示例标题
-- 这里填写示例说明
+- 全局状态管理
+- 使用Global组件管理全局状态，支持预设和异步加载
 - globalContext(@kne/current-lib_global-context)
 
 ```jsx
@@ -129,113 +88,152 @@ render(<BaseExample />);
 
 ```
 
+- 性能优化渲染
+- 使用useGlobalValue避免不必要的组件重渲染
+- globalContext(@kne/current-lib_global-context)
+
+```jsx
+const {Global, useGlobalValue, useContext} = globalContext;
+
+const Children1Component = () => {
+    console.log('children1 render');
+    const value = useGlobalValue('a');
+    return <div>context value.a: {value}</div>;
+};
+
+const Children2Component = () => {
+    console.log('children2 render');
+    const value = useGlobalValue('b');
+    return <div>context value.b: {value}</div>;
+};
+
+const ChildrenSetValue = () => {
+    const {setGlobalValue} = useContext();
+
+    return <div>
+        <button onClick={() => {
+            setGlobalValue('a', a => a + 1);
+        }}>a + 1
+        </button>
+        <button onClick={() => {
+            setGlobalValue('b', b => b + 1);
+        }}>b + 1
+        </button>
+    </div>
+};
+
+const BaseExample = () => {
+    return <Global initValue={{a: 1, b: 2}}>
+        <div>我是一个示例组件</div>
+        <Children1Component/>
+        <Children2Component/>
+        <ChildrenSetValue/>
+    </Global>;
+};
+
+render(<BaseExample/>);
+
+```
+
 
 ### API
 
-### API 参考
+### Global
+全局状态管理组件，提供跨模块的数据共享能力。
 
-#### 核心组件
+#### 属性说明
+| 属性名 | 类型 | 必填 | 默认值 | 说明 |
+|--------|------|------|--------|------|
+| preset | object | 否 | - | 预设配置数据 |
+| children | ReactNode | 是 | - | 子组件 |
+| initValue | object | 否 | {} | 初始全局状态值 |
 
-| 组件名 | 描述 | 导入方式 |
-|--------|------|----------|
-| Global | 全局状态容器组件 | `import { Global } from '@kne/global-context'` |
-| GlobalSetting | 设置全局值的组件 | `import { GlobalSetting } from '@kne/global-context'` |
-| GlobalValue | 获取全局值的组件 | `import { GlobalValue } from '@kne/global-context'` |
+### GlobalSetting
+全局状态设置组件，支持异步数据加载。
 
-#### Global
+#### 属性说明
+| 属性名 | 类型 | 必填 | 默认值 | 说明 |
+|--------|------|------|--------|------|
+| loader | function | 是 | - | 异步加载函数，返回 Promise |
+| needReady | boolean | 否 | true | 是否需要等待加载完成 |
+| children | ReactNode | 是 | - | 子组件 |
 
-全局状态容器组件的属性：
+### GlobalValue
+全局状态值渲染组件，通过渲染函数模式获取状态值。
 
-| 属性 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| children | ReactNode | 是 | 子组件 |
-| preset | object | 否 | 预设值对象 |
+#### 属性说明
+| 属性名 | 类型 | 必填 | 默认值 | 说明 |
+|--------|------|------|--------|------|
+| globalKey | string | 是 | - | 全局状态键名 |
+| children | function | 是 | - | 渲染函数，接收 value 参数 |
 
-```jsx
-<Global preset={{ theme: 'light' }}>
-  <App />
-</Global>
-```
+### Preset
+预设配置渲染组件，通过渲染函数模式获取预设值。
 
-#### GlobalSetting
+#### 属性说明
+| 属性名 | 类型 | 必填 | 默认值 | 说明 |
+|--------|------|------|--------|------|
+| children | function | 是 | - | 渲染函数，接收 preset 参数 |
 
-设置全局值的组件属性：
+### createContext
+创建 Context 实例的工具函数。
 
-| 属性 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| name | string | 是 | 全局值的键名 |
-| value | any | 是 | 要设置的值 |
+#### 返回值
+| 属性名 | 类型 | 说明 |
+|--------|------|------|
+| context | Context | React Context 对象 |
+| Provider | Component | Context Provider 组件 |
+| Consumer | Component | Context Consumer 组件 |
+| useContext | function | 获取 Context 值的 Hook |
 
-```jsx
-<GlobalSetting name="theme" value="dark" />
-```
+### useSelectorContext
+创建选择器 Context 的工具函数，支持细粒度状态订阅。
 
-#### GlobalValue
+#### 返回值
+| 属性名 | 类型 | 说明 |
+|--------|------|------|
+| context | Context | React Context 对象 |
+| Provider | Component | 选择器 Provider 组件 |
+| useContext | function | 选择器 Hook |
 
-获取全局值的组件属性：
+### useGlobalContext
+获取全局 Context 值的 Hook。
 
-| 属性 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| name | string | 是 | 全局值的键名 |
-| children | (value: any) => ReactNode | 是 | 渲染函数 |
+#### 返回值
+| 类型 | 说明 |
+|------|------|
+| object | 包含 global、setGlobal、setGlobalValue 的对象 |
 
-```jsx
-<GlobalValue name="theme">
-  {(theme) => <div>当前主题：{theme}</div>}
-</GlobalValue>
-```
+### useGlobalValue
+根据键名获取全局状态值的 Hook。
 
-#### Hooks API
+#### 参数
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| globalKey | string | 是 | 全局状态键名 |
 
-| Hook 名称 | 参数 | 返回值 | 描述 |
-|-----------|------|--------|------|
-| useGlobalValue | name: string | any | 获取指定键名的全局值 |
-| usePreset | - | object | 获取预设值对象 |
+#### 返回值
+| 类型 | 说明 |
+|------|------|
+| any | 对应键名的全局状态值 |
 
-```jsx
-const theme = useGlobalValue('theme');
-const preset = usePreset();
-```
+### usePreset
+获取预设配置值的 Hook。
 
-#### Context API
+#### 返回值
+| 类型 | 说明 |
+|------|------|
+| object | 预设配置对象 |
 
-| API | 参数 | 返回值 | 描述 |
-|-----|------|--------|------|
-| createContext | defaultValue?: any | Context 对象 | 创建新的上下文实例 |
+### useSelectorContext
+使用选择器订阅状态变化的 Hook。
 
-Context 对象包含的组件：
+#### 参数
+| 参数名 | 类型 | 必填 | 说明 |
+|--------|------|------|------|
+| selector | function | 是 | 选择器函数 |
 
-| 组件 | 属性 | 描述 |
-|------|------|------|
-| Provider | value: any | 提供上下文值的组件 |
-| Consumer | children: (value: any) => ReactNode | 消费上下文值的组件 |
-
-```jsx
-const MyContext = createContext(defaultValue);
-
-<MyContext.Provider value={value}>
-  <MyContext.Consumer>
-    {value => /* 渲染内容 */}
-  </MyContext.Consumer>
-</MyContext.Provider>
-```
-
-#### 类型定义
-
-```typescript
-interface GlobalProps {
-  children: ReactNode;
-  preset?: Record<string, any>;
-}
-
-interface GlobalSettingProps {
-  name: string;
-  value: any;
-}
-
-interface GlobalValueProps {
-  name: string;
-  children: (value: any) => ReactNode;
-}
-```
-
+#### 返回值
+| 类型 | 说明 |
+|------|------|
+| any | 选择器函数的返回值 |

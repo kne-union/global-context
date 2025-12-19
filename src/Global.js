@@ -1,17 +1,21 @@
 import React, {useState, useCallback, useEffect, useRef} from "react";
-import {Provider, useContext, usePreset} from "./globalContext";
+import {Provider, useContext, useSelectorContext, SelectProvider, PresetProvider, usePreset} from "./globalContext";
 
-const Global = ({preset, children, ...props}) => {
-    const [global, setGlobal] = useState({});
+const Global = ({preset, children, initValue}) => {
+    const [global, setGlobal] = useState(Object.assign({}, initValue));
 
-    const setGlobalWithKey = useCallback((globalKey, value) => {
+    const setGlobalValue = useCallback((globalKey, value) => {
         setGlobal((global) => {
             return Object.assign({}, global, {[globalKey]: typeof value === "function" ? value(global[globalKey]) : value});
         });
     }, []);
 
-    return <Provider value={{...props, global, preset, setGlobal, setGlobalWithKey}}>
-        {children}
+    return <Provider value={{global, setGlobal, setGlobalValue}}>
+        <PresetProvider value={preset}>
+            <SelectProvider value={global}>
+                {children}
+            </SelectProvider>
+        </PresetProvider>
     </Provider>;
 };
 
@@ -44,8 +48,7 @@ export const GlobalSetting = ({loader, needReady = true, children}) => {
 };
 
 export const useGlobalValue = (globalKey) => {
-    const {global} = useContext();
-    return global[globalKey];
+    return useSelectorContext(global => global[globalKey]);
 };
 
 export const GlobalValue = ({globalKey, children}) => {

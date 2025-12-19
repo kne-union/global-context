@@ -1,14 +1,14 @@
-import createContext from "./createContext";
+import createContext, {createSelectorContext} from "./createContext";
 
 export const context = createContext({});
 
-export const { Provider, Consumer, useContext } = context;
+export const {Provider, useContext} = context;
 
 export const useGlobalContext = useContext;
 
-export const usePreset = () => {
-  const contextValue = useContext();
-  return Object.assign({}, { apis: {} }, contextValue?.preset);
-};
+export const presetContext = createContext({});
+export const {Provider: PresetProvider, useContext: usePreset} = presetContext;
+export const selectorContext = createSelectorContext({});
+export const {Provider: SelectProvider, useContext: useSelectorContext} = selectorContext;
 
 export default context;
