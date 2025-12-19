@@ -48,7 +48,7 @@ export const GlobalSetting = ({loader, needReady = true, children}) => {
 };
 
 export const useGlobalValue = (globalKey) => {
-    return useSelectorContext(global => global[globalKey]);
+    return useSelectorContext(global => global?.[globalKey]);
 };
 
 export const GlobalValue = ({globalKey, children}) => {

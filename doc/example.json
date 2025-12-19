@@ -37,6 +37,17 @@
           "packageName": "@kne/current-lib_global-context"
         }
       ]
+    },
+    {
+      "title": "多层级情况",
+      "description": "多层级情况",
+      "code": "./multi-level.js",
+      "scope": [
+        {
+          "name": "globalContext",
+          "packageName": "@kne/current-lib_global-context"
+        }
+      ]
     }
   ]
 }
